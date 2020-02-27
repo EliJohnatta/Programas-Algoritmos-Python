@@ -1,0 +1,10 @@
+numeros = list(range(1,101))
+for numero in numeros:
+    if numero % 3 == 0 and numero % 5 == 0:
+        print('FizzBuzz')
+    elif numero % 3 == 0:
+        print('Fizz')
+    elif numero % 5 == 0:
+        print('Buzz')
+    else:
+        print(numero)
