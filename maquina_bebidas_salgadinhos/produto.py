@@ -1,22 +1,26 @@
 class Produto(object):
     
     def __init__(self, nome, sabor, valor, qtd_estoque):
-        self.nome = nome
-        self.sabor = sabor
-        self.valor = valor
-        self.qtd_estoque = qtd_estoque
+        self._nome = nome
+        self._sabor = sabor
+        self._valor = valor
+        self._qtd_estoque = qtd_estoque
 
-    def getNome(self):
-        return self.nome
+    @property
+    def nome(self):
+        return self._nome
 
-    def getSabor(self):
-        return self.sabor
+    @property
+    def sabor(self):
+        return self._sabor
 
-    def getValor(self):
-        return self.valor
+    @property
+    def valor(self):
+        return self._valor
     
-    def getQtdEstoque(self):
-        return self.qtd_estoque
+    @property
+    def qtdEstoque(self):
+        return self._qtd_estoque
     
     def decrementarEstoque(self):
-        self.qtd_estoque -= 1 
+        self._qtd_estoque -= 1 

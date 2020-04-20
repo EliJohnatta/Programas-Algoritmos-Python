@@ -15,6 +15,7 @@ class Maquina(object):
         self.guarana = Bebida('Guaraná Antarctica', 'Guaraná', 4, 32, '350 ml')
         self.troco = {'qtdMoedasUmReal':10}
         self.receita_lucrativa = 0
+        self.senha_administrativa = 'adm@7891'
 
     def exibirInterfaceInicialUsuario(self):
         while True:
@@ -54,34 +55,34 @@ class Maquina(object):
                         return resposta
                     
     def verificarDisponibilidadeEstoque(self, opcao):
-        if opcao == 1 and self.cheetos_cheddar.getQtdEstoque() != 0:
-            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_cheddar.getNome(),
-            sabor = self.cheetos_cheddar.getSabor()))
+        if opcao == 1 and self.cheetos_cheddar.qtdEstoque != 0:
+            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_cheddar.nome,
+            sabor = self.cheetos_cheddar.sabor))
             return self.cheetos_cheddar
-        elif opcao == 2 and self.cheetos_parmesao.getQtdEstoque() != 0:
-            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_parmesao.getNome(),
-            sabor = self.cheetos_parmesao.getSabor()))
+        elif opcao == 2 and self.cheetos_parmesao.qtdEstoque != 0:
+            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_parmesao.nome,
+            sabor = self.cheetos_parmesao.sabor))
             return self.cheetos_parmesao
-        elif opcao == 3 and self.cheetos_queijo.getQtdEstoque() != 0:
-            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_queijo.getNome(),
-            sabor = self.cheetos_queijo.getSabor()))
+        elif opcao == 3 and self.cheetos_queijo.qtdEstoque != 0:
+            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_queijo.nome,
+            sabor = self.cheetos_queijo.sabor))
             return self.cheetos_queijo
-        elif opcao == 4 and self.cheetos_requeijao.getQtdEstoque() != 0:
-            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_requeijao.getNome(),
-            sabor = self.cheetos_requeijao.getSabor()))
+        elif opcao == 4 and self.cheetos_requeijao.qtdEstoque != 0:
+            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.cheetos_requeijao.nome,
+            sabor = self.cheetos_requeijao.sabor))
             return self.cheetos_requeijao
-        elif opcao == 5 and self.doritos.getQtdEstoque() != 0:
-            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.doritos.getNome(),
-            sabor = self.doritos.getSabor()))
+        elif opcao == 5 and self.doritos.qtdEstoque != 0:
+            print('{nome} {sabor} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.doritos.nome,
+            sabor = self.doritos.sabor))
             return self.doritos
-        elif opcao == 6 and self.coca_cola.getQtdEstoque() != 0:
-            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.coca_cola.getNome()))
+        elif opcao == 6 and self.coca_cola.qtdEstoque != 0:
+            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.coca_cola.nome))
             return self.coca_cola
-        elif opcao == 7 and self.sprite.getQtdEstoque() != 0:
-            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.sprite.getNome()))
+        elif opcao == 7 and self.sprite.qtdEstoque != 0:
+            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.sprite.nome))
             return self.sprite
-        elif opcao == 8 and self.guarana.getQtdEstoque() != 0:
-            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.guarana.getNome()))
+        elif opcao == 8 and self.guarana.qtdEstoque != 0:
+            print('{nome} em Estoque!\nVamos continuar com o processo de compra.\n'.format(nome = self.guarana.nome))
             return self.guarana
         elif opcao != 0:
             print('Produto indisponível no estoque!\n')
@@ -107,7 +108,7 @@ class Maquina(object):
 
     def comprarProduto(self, produto, maquina):
         entrada_verificadora = maquina.verificarEntradaCompra()
-        if produto.getValor() == 5:
+        if produto.valor == 5:
             if entrada_verificadora == 2:
                 if self.troco['qtdMoedasUmReal'] < 1:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
@@ -121,46 +122,40 @@ class Maquina(object):
                         print('Nessa compra é necessário SOMENTE cédulas de dois reais!\nInsira a terceira nota.\n')
                         terceira_entrada = maquina.verificarEntradaCompra()
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.getValor()
+                    self.receita_lucrativa += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 1
-                    print(produto.getQtdEstoque())
-                    print('Valor repassado está correto!\nProduto e Troco prontos para retirada :)\nObrigado!\n################################\n')
+                    print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 1))
             elif entrada_verificadora == 5:
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.getValor()
-                print(produto.getQtdEstoque())
-                print('Valor repassado está correto!\nProduto pronto para retirada :)\nObrigado!\n################################\n')
-        elif produto.getValor() == 4:
+                self.receita_lucrativa += produto.valor
+                print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
+        elif produto.valor == 4:
             if entrada_verificadora == 2:
                 segunda_entrada = maquina.verificarEntradaCompra()
                 while segunda_entrada == 5:
                     print('Nessa compra é necessário SOMENTE cédulas de dois reais!\nInsira a segunda nota.\n')
                     segunda_entrada = maquina.verificarEntradaCompra()
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.getValor()
-                print(produto.getQtdEstoque())
-                print('Valor repassado está correto!\nProduto pronto para retirada :)\nObrigado!\n################################\n')
+                self.receita_lucrativa += produto.valor
+                print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
             elif entrada_verificadora == 5:
                 if self.troco['qtdMoedasUmReal'] < 1:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
                 else:
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.getValor()
+                    self.receita_lucrativa += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 1
-                    print(produto.getQtdEstoque())
-                    print('Valor repassado está correto!\nProduto e Troco prontos para retirada :)\nObrigado!\n################################\n')
-        elif produto.getValor() == 2:
+                    print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 1))
+        elif produto.valor == 2:
             if entrada_verificadora == 2:
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.getValor()
-                print(produto.getQtdEstoque())
-                print('Valor repassado está correto!\nProduto pronto para retirada :)\nObrigado!\n################################\n')
+                self.receita_lucrativa += produto.valor
+                print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
             elif entrada_verificadora == 5:
                 if self.troco['qtdMoedasUmReal'] < 3:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
                 else:
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.getValor()
+                    self.receita_lucrativa += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 3
-                    print(produto.getQtdEstoque())
-                    print('Valor repassado está correto!\nProduto e Troco prontos para retirada :)\nObrigado!\n################################\n')
+                    print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 3))
