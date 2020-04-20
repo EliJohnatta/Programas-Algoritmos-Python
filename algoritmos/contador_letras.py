@@ -1,7 +1,5 @@
 str = 'Olá Sr. Rogers, como você está bem, terça-feira?'
 
-
-
 def contador_letras(str):
     #Utilizando Dicionário
     d = {'maiusculas' : 0, 'minusculas' : 0, 'outros' : 0}
