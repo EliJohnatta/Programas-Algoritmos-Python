@@ -1,8 +1,10 @@
 from bebida import Bebida
 from salgadinho import Salgadinho
 
-#Máquina idealizada: 6 Seções com 4 divisorias cada, sendo que cada divisoria suporta 8 produtos
+#Ilustração da Máquina: 6 Seções com 4 divisorias cada, sendo que cada divisoria suporta 8 produtos
 class Maquina(object):
+    
+    _resposta = 0
 
     def __init__(self):
         self.cheetos_cheddar = Salgadinho('Cheetos', 'Cheddar', 2, 16, '51 g')
@@ -14,20 +16,24 @@ class Maquina(object):
         self.sprite = Bebida('Sprit', 'Limão', 4, 32, '350 ml')
         self.guarana = Bebida('Guaraná Antarctica', 'Guaraná', 4, 32, '350 ml')
         self.troco = {'qtdMoedasUmReal':10}
-        self.receita_lucrativa = 0
+        self._receita_vendas = 0
         self.senha_administrativa = 'adm@7891'
+    
+    @property
+    def receitaVendas(self):
+        return self._receita_vendas
 
     def exibirInterfaceInicialUsuario(self):
         while True:
             try:
                 print('Seja Bem-Vindo! Selecione umas das opções abaixo:')
-                resposta = int(input('1 - Comprar Produto\n0 - Sair\n'))
+                resposta = int(input('1 - Comprar Produto\n2 - Área Administrativa\n0 - Sair\n'))
             except ValueError:
                 print('ERRO, informe somente números que correspondem as opções!\n')
             else:
                 while True:
                     try:
-                        while resposta != 1 and resposta != 0:
+                        while resposta < 0 and resposta > 2:
                             print('Número digitado INCORRETO, tente mais uma vez!\n')
                             resposta = int(input('1 - Comprar Produto\n0 - Sair\n'))
                     except ValueError:
@@ -89,73 +95,97 @@ class Maquina(object):
             return 9
         elif opcao == 0:
             return 0
-
-    def verificarEntradaCompra(self):
+    
+    @staticmethod
+    def verificarEntradaCompra():
         while True:
             try:
-                resposta = int(input('É aceito somente notas de R$ 2,00 e R$ 5,00 ;)\nInsira a(s) nota(s) para o pagamento:\n'))
+                _resposta = int(input('É aceito somente notas de R$ 2,00 e R$ 5,00 ;)\nInsira a(s) nota(s) para o pagamento:\n'))
             except ValueError:
                 print('ERRO, insira uma cédula válida!\n')
             else:
                 while True:
                     try:
-                        while resposta != 2 and resposta != 5:
-                            resposta = int(input('É aceito somente notas de R$ 2,00 e R$ 5,00 ;)\nInsira a(s) nota(s) para o pagamento:\n0 - Cancelar\n'))
+                        while _resposta != 2 and _resposta != 5:
+                            _resposta = int(input('É aceito somente notas de R$ 2,00 e R$ 5,00 ;)\nInsira a(s) nota(s) para o pagamento:\n'))
                     except ValueError:
                         print('ERRO, insira uma cédula válida!\n')
                     else:
-                        return resposta
+                        return _resposta
 
-    def comprarProduto(self, produto, maquina):
-        entrada_verificadora = maquina.verificarEntradaCompra()
+    def comprarProduto(self, produto):
+        entrada_verificadora = Maquina.verificarEntradaCompra()
         if produto.valor == 5:
             if entrada_verificadora == 2:
                 if self.troco['qtdMoedasUmReal'] < 1:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
                 else:
-                    segunda_entrada = maquina.verificarEntradaCompra()
+                    segunda_entrada = Maquina.verificarEntradaCompra()
                     while segunda_entrada == 5:
                         print('Nessa compra é necessário SOMENTE cédulas de dois reais!\nInsira a segunda nota.\n')
-                        segunda_entrada = maquina.verificarEntradaCompra()
-                    terceira_entrada = maquina.verificarEntradaCompra()
+                        segunda_entrada = Maquina.verificarEntradaCompra()
+                    terceira_entrada = Maquina.verificarEntradaCompra()
                     while terceira_entrada == 5:
                         print('Nessa compra é necessário SOMENTE cédulas de dois reais!\nInsira a terceira nota.\n')
-                        terceira_entrada = maquina.verificarEntradaCompra()
+                        terceira_entrada = Maquina.verificarEntradaCompra()
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.valor
+                    self._receita_vendas += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 1
                     print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 1))
             elif entrada_verificadora == 5:
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.valor
+                self._receita_vendas += produto.valor
                 print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
         elif produto.valor == 4:
             if entrada_verificadora == 2:
-                segunda_entrada = maquina.verificarEntradaCompra()
+                segunda_entrada = Maquina.verificarEntradaCompra()
                 while segunda_entrada == 5:
                     print('Nessa compra é necessário SOMENTE cédulas de dois reais!\nInsira a segunda nota.\n')
-                    segunda_entrada = maquina.verificarEntradaCompra()
+                    segunda_entrada = Maquina.verificarEntradaCompra()
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.valor
+                self._receita_vendas += produto.valor
                 print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
             elif entrada_verificadora == 5:
                 if self.troco['qtdMoedasUmReal'] < 1:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
                 else:
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.valor
+                    self._receita_vendas += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 1
                     print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 1))
         elif produto.valor == 2:
             if entrada_verificadora == 2:
                 produto.decrementarEstoque()
-                self.receita_lucrativa += produto.valor
+                self._receita_vendas += produto.valor
                 print('Valor repassado está correto!\n{nome} pronto para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome))
             elif entrada_verificadora == 5:
                 if self.troco['qtdMoedasUmReal'] < 3:
                     print('No momento estamos impossibilitados de passar troco para essa compra.\n')
                 else:
                     produto.decrementarEstoque()
-                    self.receita_lucrativa += produto.valor
+                    self._receita_vendas += produto.valor
                     self.troco['qtdMoedasUmReal'] -= 3
                     print('Valor repassado está correto!\n{nome} e Troco(R$ {troco}.00) prontos para retirada :)\nObrigado!\n################################\n'.format(nome = produto.nome, troco = 3))
+    
+    def vericarSenhaAdministrativa(self):
+        senha = input('Informe a senha administrativa:\n')
+        while senha != self.senha_administrativa:
+            senha = input('Senha INCORRETA!\nInforme a senha administrativa:\n')
+
+    def listarFuncionalidadesAdministrativas(self):
+        while True:
+            try:
+                print('Seja Bem-Vindo! Selecione umas das opções abaixo:')
+                resposta = int(input('1 - Exibir Valor de Vendas\n0 - Sair\n'))
+            except ValueError:
+                print('ERRO, informe somente números que correspondem as opções!\n')
+            else:
+                while True:
+                    try:
+                        while resposta != 0 and resposta != 1:
+                            print('Número digitado INCORRETO, tente mais uma vez!\n')
+                            resposta = int(input('1 - Exibir Valor de Vendas\n0 - Sair\n'))
+                    except ValueError:
+                        print('ERRO, informe somente os números que correspondem as opções!\n')
+                    else:
+                        return resposta
